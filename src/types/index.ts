@@ -10,7 +10,9 @@ export interface User {
 }
 
 export interface UserState {
-    users: User[];
+    user: User[];
     loading: boolean;
     error: string | null;
 }
+
+export const api: string = "https://jsonplaceholder.typicode.com/users";
