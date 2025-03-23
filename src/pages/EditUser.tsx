@@ -3,13 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import UserForm from '../components/UserForm';
 import { fetchUsers, editUser } from '../reduxManager/userSlice';
-import { RootState } from '../types';
+import { RootState, AppDispatch } from '../reduxManager/store';
+import { User } from '../types/index'
+
 
 const EditUser: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const dispatch = useDispatch();
+    const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate();
-    const user = useSelector((state: RootState) => state.users.find(user => user.id === Number(id)));
+    const user = useSelector((state: RootState) => state.user.user.find(user => user.id === Number(id)));
 
     useEffect(() => {
         if (!user) {
@@ -17,9 +19,9 @@ const EditUser: React.FC = () => {
         }
     }, [dispatch, user]);
 
-    const handleEditUser = (updatedUser: any) => {
+    const handleEditUser = (updatedUser: User) => {
         dispatch(editUser(updatedUser));
-        navigate('/users');
+        navigate('/');
     };
 
     return (

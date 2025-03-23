@@ -1,21 +1,29 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { RootState } from '../reduxManager/store';
-import UserCard from '../components/UserCard';
+import { RootState, AppDispatch } from '../reduxManager/store';
+import { fetchUsers } from '../reduxManager/userSlice';
 
 const UserDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const user = useSelector((state: RootState) => state.users.find(user => user.id === parseInt(id!)));
+    const dispatch: AppDispatch = useDispatch();
+    const user = useSelector((state: RootState) => state.user.user.find(user => user.id === Number(id)));
+
+    useEffect(() => {
+        if (!user) {
+            dispatch(fetchUsers());
+        }
+    }, [dispatch, user]);
 
     if (!user) {
-        return <div>User not found</div>;
+        return <p>User not found</p>;
     }
 
     return (
         <div>
-            <h1>User Details</h1>
-            <UserCard user={user} />
+            <h1>{user.name}</h1>
+            <p>{user.email}</p>
+            <p>{user.address.street}, {user.address.city}</p>
         </div>
     );
 };
